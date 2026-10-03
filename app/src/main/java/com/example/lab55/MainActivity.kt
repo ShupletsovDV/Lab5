@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -52,6 +53,7 @@ fun OrderFormScreen() {
     var orderAmount by remember { mutableStateOf("") }
     var dishCount by remember { mutableStateOf("") }
     var tipsPercent by remember { mutableStateOf(0f) }
+    val selectedDiscount = discountForDishCount(dishCount.toIntOrNull())
 
     Column(
         modifier = Modifier
@@ -79,8 +81,16 @@ fun OrderFormScreen() {
             onTipsPercentChange = { tipsPercent = it }
         )
         Spacer(modifier = Modifier.height(20.dp))
-        DiscountRadioGroup(selectedDiscount = null)
+        DiscountRadioGroup(selectedDiscount = selectedDiscount)
     }
+}
+
+private fun discountForDishCount(dishCount: Int?): Int? = when {
+    dishCount == null || dishCount <= 0 -> null
+    dishCount <= 2 -> 3
+    dishCount <= 5 -> 5
+    dishCount <= 10 -> 7
+    else -> 10
 }
 
 
@@ -100,15 +110,23 @@ private fun DiscountRadioGroup(selectedDiscount: Int?) {
             style = MaterialTheme.typography.headlineSmall
         )
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             discounts.forEach { discount ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.width(48.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     RadioButton(
                         selected = selectedDiscount == discount,
                         onClick = null,
-                        enabled = false
+                        enabled = false,
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Color(0xFF7654C9),
+                            unselectedColor = Color(0xFF444444),
+                            disabledSelectedColor = Color(0xFF7654C9),
+                            disabledUnselectedColor = Color(0xFF444444)
+                        )
                     )
                     Text(
                         text = "$discount%",

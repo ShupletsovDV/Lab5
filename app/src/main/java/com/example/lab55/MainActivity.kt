@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +50,7 @@ class MainActivity : ComponentActivity() {
 fun OrderFormScreen() {
     var orderAmount by remember { mutableStateOf("") }
     var dishCount by remember { mutableStateOf("") }
+    var tipsPercent by remember { mutableStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -67,6 +72,36 @@ fun OrderFormScreen() {
             keyboardType = KeyboardType.Number,
             fieldWidth = 60.dp
         )
+        Spacer(modifier = Modifier.height(14.dp))
+        TipsSlider(
+            tipsPercent = tipsPercent,
+            onTipsPercentChange = { tipsPercent = it }
+        )
+    }
+}
+
+@Composable
+private fun TipsSlider(tipsPercent: Float, onTipsPercentChange: (Float) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(text = "Чаевые:", style = MaterialTheme.typography.bodyLarge)
+        Slider(
+            value = tipsPercent,
+            onValueChange = onTipsPercentChange,
+            modifier = Modifier.fillMaxWidth(),
+            valueRange = 0f..25f,
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF526EA8),
+                activeTrackColor = Color(0xFF526EA8),
+                inactiveTrackColor = Color(0xFFE1E6F6)
+            )
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "0", style = MaterialTheme.typography.headlineSmall)
+            Text(text = "25", style = MaterialTheme.typography.headlineSmall)
+        }
     }
 }
 

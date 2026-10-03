@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -77,6 +78,45 @@ fun OrderFormScreen() {
             tipsPercent = tipsPercent,
             onTipsPercentChange = { tipsPercent = it }
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        DiscountRadioGroup(selectedDiscount = null)
+    }
+}
+
+
+@Composable
+private fun DiscountRadioGroup(selectedDiscount: Int?) {
+    val discounts = listOf(3, 5, 7, 10)
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = "Скидка:",
+            modifier = Modifier
+                .width(96.dp)
+                .padding(top = 10.dp),
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            discounts.forEach { discount ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    RadioButton(
+                        selected = selectedDiscount == discount,
+                        onClick = null,
+                        enabled = false
+                    )
+                    Text(
+                        text = "$discount%",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+            }
+        }
     }
 }
 
